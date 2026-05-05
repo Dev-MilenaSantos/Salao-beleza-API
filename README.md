@@ -1,6 +1,23 @@
-# Salão de Beleza API
+
+# Salao-beleza-API
 
 API REST para gerenciamento de salão de beleza: clientes, profissionais, serviços, agendamentos e pagamentos.
+
+## Desenvolvimento com IA
+
+Este projeto foi desenvolvido com o suporte do **Claude Code** e do framework 
+**[Superpowers](https://github.com/Dev-MilenaSantos/superpowers)** — um sistema 
+de habilidades agênticas que potencializa o desenvolvimento de software com IA.
+
+O Superpowers auxiliou no processo de desenvolvimento através de fluxos 
+estruturados como brainstorming, planejamento de implementação, desenvolvimento 
+orientado a testes (TDD) e revisão de código — garantindo qualidade e 
+consistência ao longo do projeto.
+
+Todo o planejamento, decisões de arquitetura e condução do projeto foram de 
+minha autoria. 
+
+O uso de IA no desenvolvimento de software é uma competência moderna e estratégica.
 
 ## Tecnologias
 
