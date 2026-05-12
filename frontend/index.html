@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salão Beauty</title>
+<style>
+  :root {
+    --pink-hot:   #ff2d78;
+    --pink-mid:   #ff6eb4;
+    --pink-light: #ffd6e8;
+    --bg-deep:    #07070f;
+    --bg-header:  #12001f;
+    --bg-panel:   rgba(255,255,255,0.03);
+    --border:     rgba(255,45,120,0.2);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg-deep); color: #eee; font-family: 'Segoe UI', sans-serif; font-size: 13px; min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, var(--bg-header), #1a0030);
+    border-bottom: 1px solid rgba(255,45,120,0.3);
+    padding: 20px 28px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 40px rgba(255,45,120,0.1);
+  }
+
+  @keyframes neon-on {
+    0%   { opacity: 0.1; text-shadow: none; }
+    20%  { opacity: 1; text-shadow: 0 0 8px var(--pink-hot), 0 0 20px var(--pink-hot), 0 0 40px rgba(255,45,120,0.5); }
+    22%  { opacity: 0.4; text-shadow: none; }
+    24%  { opacity: 1; text-shadow: 0 0 8px var(--pink-hot), 0 0 20px var(--pink-hot), 0 0 40px rgba(255,45,120,0.5); }
+    100% { opacity: 1; text-shadow: 0 0 8px var(--pink-hot), 0 0 20px var(--pink-hot), 0 0 40px rgba(255,45,120,0.5); }
+  }
+  @keyframes neon-flicker {
+    0%, 95%, 100% { opacity: 1; text-shadow: 0 0 8px var(--pink-mid), 0 0 22px rgba(255,110,180,0.7), 0 0 45px rgba(255,110,180,0.3); }
+    96%  { opacity: 0.6; text-shadow: none; }
+    97%  { opacity: 1; text-shadow: 0 0 8px var(--pink-mid), 0 0 22px rgba(255,110,180,0.7); }
+    98%  { opacity: 0.7; text-shadow: 0 0 4px var(--pink-mid); }
+  }
+  @keyframes neon-pulse {
+    0%, 100% { text-shadow: 0 0 10px rgba(255,214,232,0.8), 0 0 25px rgba(255,110,180,0.5), 0 0 50px rgba(255,45,120,0.3); }
+    50%      { text-shadow: 0 0 18px var(--pink-light), 0 0 40px rgba(255,110,180,0.8), 0 0 70px rgba(255,45,120,0.5); }
+  }
+  @keyframes line-grow {
+    from { width: 0; opacity: 0; }
+    to   { width: 220px; opacity: 1; }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes toast-in {
+    from { transform: translateX(120%); opacity: 0; }
+    to   { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes toast-out {
+    from { transform: translateX(0); opacity: 1; }
+    to   { transform: translateX(120%); opacity: 0; }
+  }
+
+  .brand { display: flex; align-items: baseline; }
+  .brand .word  { display: flex; }
+  .brand .space { width: 14px; }
+  .brand .letter {
+    font-size: 30px; font-weight: 900; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--pink-hot); opacity: 0;
+  }
+  .brand .word2 .letter { color: var(--pink-mid); }
+  .brand .word  .letter:nth-child(1) { animation: neon-on .5s 0.0s forwards, neon-flicker 6s   1.0s infinite; }
+  .brand .word  .letter:nth-child(2) { animation: neon-on .5s 0.1s forwards, neon-pulse   4s   1.2s infinite; color: #ff3d84; }
+  .brand .word  .letter:nth-child(3) { animation: neon-on .5s 0.2s forwards, neon-flicker 7s   2.1s infinite; }
+  .brand .word  .letter:nth-child(4) { animation: neon-on .5s 0.3s forwards, neon-pulse   5s   0.8s infinite; color: #ff4e8e; }
+  .brand .word  .letter:nth-child(5) { animation: neon-on .5s 0.4s forwards, neon-flicker 5s   3.0s infinite; }
+  .brand .word2 .letter:nth-child(1) { animation: neon-on .5s 0.6s forwards, neon-pulse   4.5s 1.5s infinite; }
+  .brand .word2 .letter:nth-child(2) { animation: neon-on .5s 0.7s forwards, neon-flicker 8s   2.5s infinite; color: #ffaacc; }
+  .brand .word2 .letter:nth-child(3) { animation: neon-on .5s 0.8s forwards, neon-pulse   3.5s 0.5s infinite; }
+  .brand .word2 .letter:nth-child(4) { animation: neon-on .5s 0.9s forwards, neon-flicker 6s   4.0s infinite; color: #ff8fc0; }
+  .brand .word2 .letter:nth-child(5) { animation: neon-on .5s 1.0s forwards, neon-pulse   5.5s 1.8s infinite; }
+  .brand .word2 .letter:nth-child(6) { animation: neon-on .5s 1.1s forwards, neon-flicker 7s   3.5s infinite; color: #ffd6e8; }
+  .brand-line {
+    display: block; height: 2px; margin: 6px auto 0;
+    background: linear-gradient(90deg, transparent, var(--pink-hot), var(--pink-mid), var(--pink-light), var(--pink-mid), var(--pink-hot), transparent);
+    animation: line-grow 1.2s 1.3s ease forwards;
+    width: 0; opacity: 0; box-shadow: 0 0 8px rgba(255,45,120,0.5);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex; gap: 4px;
+    padding: 14px 28px 0;
+    background: #0a000f;
+    border-bottom: 1px solid rgba(255,45,120,0.15);
+  }
+  .tab {
+    padding: 9px 20px; border-radius: 8px 8px 0 0;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    border: 1px solid transparent; border-bottom: none;
+    color: rgba(255,110,180,0.4);
+    transition: all 0.2s; letter-spacing: 0.5px; user-select: none;
+  }
+  .tab.active { background: rgba(255,45,120,0.1); border-color: rgba(255,45,120,0.3); color: var(--pink-mid); box-shadow: 0 0 12px rgba(255,45,120,0.15); }
+  .tab:not(.active):hover { color: rgba(255,110,180,0.7); background: rgba(255,45,120,0.05); }
+
+  /* CONTENT */
+  .content { padding: 24px 28px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* STATS */
+  .stats { display: flex; gap: 14px; margin-bottom: 22px; }
+  .stat-card {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(255,45,120,0.07), rgba(255,110,180,0.03));
+    border: 1px solid rgba(255,45,120,0.2); border-radius: 12px;
+    padding: 16px 20px; position: relative; overflow: hidden;
+  }
+  .stat-card::before {
+    content: ''; position: absolute; top: -20px; right: -20px;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle, rgba(255,45,120,0.2), transparent); border-radius: 50%;
+  }
+  .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .stat-label { font-size: 10px; color: rgba(255,110,180,0.5); text-transform: uppercase; letter-spacing: 1px; }
+  .stat-value {
+    font-size: 26px; font-weight: 700;
+    background: linear-gradient(90deg, var(--pink-hot), var(--pink-light));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .btn-refresh {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,45,120,0.1); border: 1px solid rgba(255,45,120,0.3);
+    color: var(--pink-mid); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, box-shadow 0.2s; flex-shrink: 0; padding: 0;
+  }
+  .btn-refresh:hover { background: rgba(255,45,120,0.25); box-shadow: 0 0 10px rgba(255,45,120,0.4); }
+  .btn-refresh.spinning svg { animation: spin 0.5s linear; }
+
+  /* PANEL */
+  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .panel-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-size: 13px; font-weight: 600; color: var(--pink-mid); letter-spacing: 0.5px; }
+
+  /* BUTTONS */
+  .btn { padding: 7px 16px; border-radius: 8px; font-size: 12px; cursor: pointer; border: none; font-weight: 600; transition: all 0.2s; }
+  .btn-primary { background: linear-gradient(135deg, var(--pink-hot), var(--pink-mid)); color: #fff; box-shadow: 0 0 14px rgba(255,45,120,0.3); }
+  .btn-primary:hover { box-shadow: 0 0 22px rgba(255,45,120,0.5); }
+  .btn-sm { padding: 4px 12px; font-size: 11px; border-radius: 6px; }
+  .btn-edit { background: rgba(255,110,180,0.12); border: 1px solid rgba(255,110,180,0.3); color: var(--pink-mid); }
+  .btn-edit:hover { background: rgba(255,110,180,0.2); }
+  .btn-del  { background: rgba(255,45,120,0.12); border: 1px solid rgba(255,45,120,0.3); color: var(--pink-hot); }
+  .btn-del:hover  { background: rgba(255,45,120,0.2); }
+
+  /* TABLE */
+  .table { width: 100%; border-collapse: collapse; }
+  .table th { padding: 10px 16px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,110,180,0.4); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .table td { padding: 11px 16px; border-bottom: 1px solid rgba(255,45,120,0.07); color: #ddd; font-size: 12px; }
+  .table tr:last-child td { border-bottom: none; }
+  .table tr:hover td { background: rgba(255,45,120,0.04); }
+  .table .id-cell { color: var(--pink-mid); font-weight: 600; }
+  .table .actions { display: flex; gap: 6px; align-items: center; }
+
+  /* FORM */
+  .form-row {
+    display: flex; gap: 10px; padding: 14px 20px;
+    flex-wrap: wrap; align-items: flex-end;
+    background: rgba(255,45,120,0.03); border-top: 1px solid rgba(255,45,120,0.1);
+  }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-label { font-size: 10px; color: rgba(255,110,180,0.5); text-transform: uppercase; letter-spacing: 0.5px; }
+  .form-input, .form-select {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,45,120,0.2);
+    border-radius: 8px; color: #eee; padding: 7px 12px; font-size: 12px; outline: none;
+    min-width: 140px; transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .form-input:focus, .form-select:focus { border-color: var(--pink-hot); box-shadow: 0 0 8px rgba(255,45,120,0.25); }
+  .form-select option { background: #1a001f; color: #eee; }
+  .form-input.editing { border-color: rgba(255,110,180,0.5); box-shadow: 0 0 6px rgba(255,110,180,0.2); }
+
+  /* BADGES */
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; }
+  .badge-confirmado { background: rgba(0,255,136,0.1); border: 1px solid rgba(0,255,136,0.3); color: #00ff88; }
+  .badge-cancelado  { background: rgba(255,45,120,0.1); border: 1px solid rgba(255,45,120,0.3); color: var(--pink-hot); }
+  .badge-concluido  { background: rgba(255,110,180,0.1); border: 1px solid rgba(255,110,180,0.3); color: var(--pink-mid); }
+  .badge-no_show    { background: rgba(255,204,0,0.1); border: 1px solid rgba(255,204,0,0.3); color: #ffcc00; }
+
+  /* TOAST */
+  #toast-container { position: fixed; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; pointer-events: none; }
+  .toast { padding: 10px 18px; border-radius: 10px; font-size: 12px; font-weight: 500; animation: toast-in 0.3s ease; pointer-events: auto; max-width: 300px; }
+  .toast-success { background: linear-gradient(135deg, var(--pink-hot), var(--pink-mid)); color: #fff; box-shadow: 0 0 20px rgba(255,45,120,0.4); }
+  .toast-error   { background: linear-gradient(135deg, #7f0020, #c0003a); color: var(--pink-light); box-shadow: 0 0 20px rgba(200,0,50,0.4); }
+  .toast.hiding  { animation: toast-out 0.3s ease forwards; }
+
+  .empty-row td { text-align: center; color: rgba(255,110,180,0.3); font-style: italic; padding: 24px; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="brand">
+      <div class="word">
+        <span class="letter">S</span><span class="letter">a</span><span class="letter">l</span><span class="letter">ã</span><span class="letter">o</span>
+      </div>
+      <div class="space"></div>
+      <div class="word word2">
+        <span class="letter">B</span><span class="letter">e</span><span class="letter">a</span><span class="letter">u</span><span class="letter">t</span><span class="letter">y</span>
+      </div>
+    </div>
+    <span class="brand-line"></span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tab active"  onclick="showTab('clientes')">Clientes</div>
+  <div class="tab"         onclick="showTab('profissionais')">Profissionais</div>
+  <div class="tab"         onclick="showTab('servicos')">Serviços</div>
+  <div class="tab"         onclick="showTab('agendamentos')">Agendamentos</div>
+  <div class="tab"         onclick="showTab('pagamentos')">Pagamentos</div>
+</nav>
+
+<main class="content">
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Total Clientes</span>
+        <button class="btn-refresh" onclick="refreshStat(event,'clientes')" title="Atualizar">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+      <div class="stat-value" id="stat-clientes">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Profissionais</span>
+        <button class="btn-refresh" onclick="refreshStat(event,'profissionais')" title="Atualizar">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+      <div class="stat-value" id="stat-profissionais">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-top">
+        <span class="stat-label">Total Agendamentos</span>
+        <button class="btn-refresh" onclick="refreshStat(event,'agendamentos')" title="Atualizar">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+          </svg>
+        </button>
+      </div>
+      <div class="stat-value" id="stat-agendamentos">—</div>
+    </div>
+  </div>
+
+  <div id="panel-clientes" class="tab-panel active">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Clientes cadastrados</span>
+        <button class="btn btn-primary btn-sm" onclick="novoCliente()">+ Novo Cliente</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-clientes"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody>
+      </table>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nome *</label><input class="form-input" id="cli-nome" placeholder="Nome completo"></div>
+        <div class="form-group"><label class="form-label">Telefone *</label><input class="form-input" id="cli-telefone" placeholder="(00) 00000-0000"></div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="cli-email" type="email" placeholder="email@exemplo.com"></div>
+        <input type="hidden" id="cli-id">
+        <button class="btn btn-primary" id="btn-cli" onclick="saveCliente()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel-profissionais" class="tab-panel">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Profissionais cadastrados</span>
+        <button class="btn btn-primary btn-sm" onclick="novoProfissional()">+ Novo Profissional</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>Nome</th><th>Telefone</th><th>Especialidade</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-profissionais"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody>
+      </table>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nome *</label><input class="form-input" id="pro-nome" placeholder="Nome completo"></div>
+        <div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="pro-telefone" placeholder="(00) 00000-0000"></div>
+        <div class="form-group"><label class="form-label">Especialidade</label><input class="form-input" id="pro-especialidade" placeholder="Ex: Coloração"></div>
+        <input type="hidden" id="pro-id">
+        <button class="btn btn-primary" id="btn-pro" onclick="saveProfissional()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel-servicos" class="tab-panel">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Serviços cadastrados</span>
+        <button class="btn btn-primary btn-sm" onclick="novoServico()">+ Novo Serviço</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>Nome</th><th>Descrição</th><th>Duração (min)</th><th>Preço</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-servicos"><tr class="empty-row"><td colspan="6">Carregando...</td></tr></tbody>
+      </table>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Nome *</label><input class="form-input" id="svc-nome" placeholder="Ex: Corte feminino"></div>
+        <div class="form-group"><label class="form-label">Descrição</label><input class="form-input" id="svc-descricao" placeholder="Descrição opcional"></div>
+        <div class="form-group"><label class="form-label">Duração (min) *</label><input class="form-input" id="svc-duracao" type="number" min="1" placeholder="60" style="width:100px"></div>
+        <div class="form-group"><label class="form-label">Preço (R$) *</label><input class="form-input" id="svc-preco" type="number" min="0.01" step="0.01" placeholder="80.00" style="width:110px"></div>
+        <input type="hidden" id="svc-id">
+        <button class="btn btn-primary" id="btn-svc" onclick="saveServico()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel-agendamentos" class="tab-panel">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Agendamentos</span>
+        <button class="btn btn-primary btn-sm" onclick="novoAgendamento()">+ Novo Agendamento</button>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>Cliente</th><th>Profissional</th><th>Serviço</th><th>Data/Hora</th><th>Status</th><th>Ações</th></tr></thead>
+        <tbody id="tbody-agendamentos"><tr class="empty-row"><td colspan="7">Carregando...</td></tr></tbody>
+      </table>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Cliente *</label>
+          <select class="form-select" id="age-clienteId" style="min-width:150px"><option value="">Selecione...</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Profissional *</label>
+          <select class="form-select" id="age-profissionalId" style="min-width:150px"><option value="">Selecione...</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Serviço *</label>
+          <select class="form-select" id="age-servicoId" style="min-width:150px"><option value="">Selecione...</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data/Hora *</label>
+          <input class="form-input" id="age-dataHora" type="datetime-local" style="min-width:170px">
+        </div>
+        <button class="btn btn-primary" onclick="saveAgendamento()">Salvar</button>
+      </div>
+    </div>
+  </div>
+  <div id="panel-pagamentos" class="tab-panel">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Pagamentos</span>
+      </div>
+      <table class="table">
+        <thead><tr><th>#</th><th>Agendamento #</th><th>Valor</th><th>Forma de Pagamento</th><th>Data do Pagamento</th></tr></thead>
+        <tbody id="tbody-pagamentos"><tr class="empty-row"><td colspan="5">Carregando...</td></tr></tbody>
+      </table>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Agendamento # *</label><input class="form-input" id="pag-agendamentoId" type="number" min="1" placeholder="ID" style="width:120px"></div>
+        <div class="form-group"><label class="form-label">Valor (R$) *</label><input class="form-input" id="pag-valor" type="number" min="0.01" step="0.01" placeholder="0.00" style="width:120px"></div>
+        <div class="form-group">
+          <label class="form-label">Forma de Pagamento *</label>
+          <select class="form-select" id="pag-formaPagamento">
+            <option value="">Selecione...</option>
+            <option value="DINHEIRO">Dinheiro</option>
+            <option value="CARTAO">Cartão</option>
+            <option value="PIX">Pix</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="savePagamento()">Registrar Pagamento</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast-container"></div>
+
+<script>
+  const API = 'http://localhost:8080';
+
+  // ── UTILITIES ──
+  function escAttr(s) { return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+  function fmtPreco(v) { return 'R$ ' + Number(v).toFixed(2); }
+  function fmtDt(dt) {
+    if (!dt) return '—';
+    return new Date(dt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+  }
+
+  // ── FETCH HELPER ──
+  async function api(path, opts = {}) {
+    const res = await fetch(API + path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'Erro ' + res.status);
+    }
+    if (res.status === 204) return null;
+    return res.json();
+  }
+
+  // ── TOAST ──
+  function showToast(msg, type = 'success') {
+    const el = document.createElement('div');
+    el.className = 'toast toast-' + type;
+    el.textContent = msg;
+    document.getElementById('toast-container').appendChild(el);
+    setTimeout(() => { el.classList.add('hiding'); setTimeout(() => el.remove(), 300); }, 3000);
+  }
+
+  // ── TABS ──
+  const TAB_NAMES = ['clientes','profissionais','servicos','agendamentos','pagamentos'];
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', TAB_NAMES[i] === name));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+
+  // ── STATS ──
+  async function refreshStat(ev, resource) {
+    const btn = ev.currentTarget;
+    btn.classList.add('spinning');
+    try {
+      const data = await api('/' + resource);
+      document.getElementById('stat-' + resource).textContent = data.length;
+    } catch(e) { showToast('Erro ao atualizar: ' + e.message, 'error'); }
+    finally { setTimeout(() => btn.classList.remove('spinning'), 500); }
+  }
+  async function statSilent(resource) {
+    try { document.getElementById('stat-' + resource).textContent = (await api('/' + resource)).length; } catch {}
+  }
+  async function loadAllStats() {
+    const names = ['clientes','profissionais','agendamentos'];
+    const results = await Promise.allSettled(names.map(r => api('/' + r)));
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled')
+        document.getElementById('stat-' + names[i]).textContent = r.value.length;
+    });
+  }
+
+  // ── RENDER HELPERS ──
+  function renderEmpty(tbodyId, cols, msg) {
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = '';
+    const tr = document.createElement('tr');
+    tr.className = 'empty-row';
+    const td = document.createElement('td');
+    td.colSpan = cols;
+    td.textContent = msg;
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+  }
+
+  // ── CLIENTES ──
+  async function loadClientes() {
+    try {
+      const list = await api('/clientes');
+      if (!list.length) { renderEmpty('tbody-clientes', 5, 'Nenhum cliente cadastrado'); return; }
+      document.getElementById('tbody-clientes').innerHTML = list.map(c => `
+        <tr>
+          <td class="id-cell">${c.id}</td>
+          <td>${escHtml(c.nome)}</td>
+          <td>${escHtml(c.telefone || '—')}</td>
+          <td>${escHtml(c.email || '—')}</td>
+          <td class="actions">
+            <button class="btn btn-sm btn-edit" onclick="editCliente(${c.id},'${escAttr(c.nome)}','${escAttr(c.telefone)}','${escAttr(c.email)}')">Editar</button>
+            <button class="btn btn-sm btn-del"  onclick="deleteCliente(${c.id})">Remover</button>
+          </td>
+        </tr>`).join('');
+    } catch(e) { renderEmpty('tbody-clientes', 5, 'Erro ao carregar'); showToast(e.message, 'error'); }
+  }
+
+  function editCliente(id, nome, telefone, email) {
+    document.getElementById('cli-id').value      = id;
+    document.getElementById('cli-nome').value    = nome;
+    document.getElementById('cli-telefone').value= telefone;
+    document.getElementById('cli-email').value   = email;
+    ['cli-nome','cli-telefone','cli-email'].forEach(i => document.getElementById(i).classList.add('editing'));
+    document.getElementById('btn-cli').textContent = 'Atualizar';
+  }
+
+  function novoCliente() {
+    ['cli-id','cli-nome','cli-telefone','cli-email'].forEach(i => document.getElementById(i).value = '');
+    ['cli-nome','cli-telefone','cli-email'].forEach(i => document.getElementById(i).classList.remove('editing'));
+    document.getElementById('btn-cli').textContent = 'Salvar';
+  }
+
+  async function saveCliente() {
+    const nome     = document.getElementById('cli-nome').value.trim();
+    const telefone = document.getElementById('cli-telefone').value.trim();
+    const email    = document.getElementById('cli-email').value.trim();
+    const id       = document.getElementById('cli-id').value;
+    if (!nome || !telefone) { showToast('Nome e telefone são obrigatórios', 'error'); return; }
+    try {
+      if (id) {
+        await api('/clientes/' + id, { method: 'PUT', body: JSON.stringify({ nome, telefone, email }) });
+        showToast('Cliente atualizado!');
+      } else {
+        await api('/clientes', { method: 'POST', body: JSON.stringify({ nome, telefone, email }) });
+        showToast('Cliente criado!');
+      }
+      novoCliente(); await loadClientes(); await statSilent('clientes');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function deleteCliente(id) {
+    if (!confirm('Remover este cliente?')) return;
+    try {
+      await api('/clientes/' + id, { method: 'DELETE' });
+      showToast('Cliente removido!'); await loadClientes(); await statSilent('clientes');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  // ── PROFISSIONAIS ──
+  async function loadProfissionais() {
+    try {
+      const list = await api('/profissionais');
+      if (!list.length) { renderEmpty('tbody-profissionais', 5, 'Nenhum profissional cadastrado'); return; }
+      document.getElementById('tbody-profissionais').innerHTML = list.map(p => `
+        <tr>
+          <td class="id-cell">${p.id}</td>
+          <td>${escHtml(p.nome)}</td>
+          <td>${escHtml(p.telefone || '—')}</td>
+          <td>${escHtml(p.especialidade || '—')}</td>
+          <td class="actions">
+            <button class="btn btn-sm btn-edit" onclick="editProfissional(${p.id},'${escAttr(p.nome)}','${escAttr(p.telefone)}','${escAttr(p.especialidade)}')">Editar</button>
+            <button class="btn btn-sm btn-del"  onclick="deleteProfissional(${p.id})">Remover</button>
+          </td>
+        </tr>`).join('');
+    } catch(e) { renderEmpty('tbody-profissionais', 5, 'Erro ao carregar'); showToast(e.message, 'error'); }
+  }
+
+  function editProfissional(id, nome, telefone, especialidade) {
+    document.getElementById('pro-id').value            = id;
+    document.getElementById('pro-nome').value          = nome;
+    document.getElementById('pro-telefone').value      = telefone;
+    document.getElementById('pro-especialidade').value = especialidade;
+    ['pro-nome','pro-telefone','pro-especialidade'].forEach(i => document.getElementById(i).classList.add('editing'));
+    document.getElementById('btn-pro').textContent = 'Atualizar';
+  }
+
+  function novoProfissional() {
+    ['pro-id','pro-nome','pro-telefone','pro-especialidade'].forEach(i => document.getElementById(i).value = '');
+    ['pro-nome','pro-telefone','pro-especialidade'].forEach(i => document.getElementById(i).classList.remove('editing'));
+    document.getElementById('btn-pro').textContent = 'Salvar';
+  }
+
+  async function saveProfissional() {
+    const nome          = document.getElementById('pro-nome').value.trim();
+    const telefone      = document.getElementById('pro-telefone').value.trim();
+    const especialidade = document.getElementById('pro-especialidade').value.trim();
+    const id            = document.getElementById('pro-id').value;
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return; }
+    try {
+      if (id) {
+        await api('/profissionais/' + id, { method: 'PUT', body: JSON.stringify({ nome, telefone, especialidade }) });
+        showToast('Profissional atualizado!');
+      } else {
+        await api('/profissionais', { method: 'POST', body: JSON.stringify({ nome, telefone, especialidade }) });
+        showToast('Profissional criado!');
+      }
+      novoProfissional(); await loadProfissionais(); await statSilent('profissionais');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function deleteProfissional(id) {
+    if (!confirm('Remover este profissional?')) return;
+    try {
+      await api('/profissionais/' + id, { method: 'DELETE' });
+      showToast('Profissional removido!'); await loadProfissionais(); await statSilent('profissionais');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  // ── SERVIÇOS ──
+  async function loadServicos() {
+    try {
+      const list = await api('/servicos');
+      if (!list.length) { renderEmpty('tbody-servicos', 6, 'Nenhum serviço cadastrado'); return; }
+      document.getElementById('tbody-servicos').innerHTML = list.map(s => `
+        <tr>
+          <td class="id-cell">${s.id}</td>
+          <td>${escHtml(s.nome)}</td>
+          <td>${escHtml(s.descricao || '—')}</td>
+          <td>${s.duracao}</td>
+          <td>${fmtPreco(s.preco)}</td>
+          <td class="actions">
+            <button class="btn btn-sm btn-edit" onclick="editServico(${s.id},'${escAttr(s.nome)}','${escAttr(s.descricao)}',${s.duracao},${s.preco})">Editar</button>
+            <button class="btn btn-sm btn-del"  onclick="deleteServico(${s.id})">Remover</button>
+          </td>
+        </tr>`).join('');
+    } catch(e) { renderEmpty('tbody-servicos', 6, 'Erro ao carregar'); showToast(e.message, 'error'); }
+  }
+
+  function editServico(id, nome, descricao, duracao, preco) {
+    document.getElementById('svc-id').value       = id;
+    document.getElementById('svc-nome').value     = nome;
+    document.getElementById('svc-descricao').value= descricao;
+    document.getElementById('svc-duracao').value  = duracao;
+    document.getElementById('svc-preco').value    = preco;
+    ['svc-nome','svc-descricao','svc-duracao','svc-preco'].forEach(i => document.getElementById(i).classList.add('editing'));
+    document.getElementById('btn-svc').textContent = 'Atualizar';
+  }
+
+  function novoServico() {
+    ['svc-id','svc-nome','svc-descricao','svc-duracao','svc-preco'].forEach(i => document.getElementById(i).value = '');
+    ['svc-nome','svc-descricao','svc-duracao','svc-preco'].forEach(i => document.getElementById(i).classList.remove('editing'));
+    document.getElementById('btn-svc').textContent = 'Salvar';
+  }
+
+  async function saveServico() {
+    const nome      = document.getElementById('svc-nome').value.trim();
+    const descricao = document.getElementById('svc-descricao').value.trim();
+    const duracao   = parseInt(document.getElementById('svc-duracao').value);
+    const preco     = parseFloat(document.getElementById('svc-preco').value);
+    const id        = document.getElementById('svc-id').value;
+    if (!nome || !duracao || !preco) { showToast('Nome, duração e preço são obrigatórios', 'error'); return; }
+    try {
+      if (id) {
+        await api('/servicos/' + id, { method: 'PUT', body: JSON.stringify({ nome, descricao, duracao, preco }) });
+        showToast('Serviço atualizado!');
+      } else {
+        await api('/servicos', { method: 'POST', body: JSON.stringify({ nome, descricao, duracao, preco }) });
+        showToast('Serviço criado!');
+      }
+      novoServico(); await loadServicos();
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function deleteServico(id) {
+    if (!confirm('Remover este serviço?')) return;
+    try {
+      await api('/servicos/' + id, { method: 'DELETE' });
+      showToast('Serviço removido!'); await loadServicos();
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  // ── AGENDAMENTOS ──
+  function statusBadge(s) {
+    const cls = { CONFIRMADO:'confirmado', CANCELADO:'cancelado', CONCLUIDO:'concluido', NO_SHOW:'no_show' };
+    return `<span class="badge badge-${cls[s]||'confirmado'}">${escHtml(s)}</span>`;
+  }
+
+  async function loadAgendamentos() {
+    try {
+      const list = await api('/agendamentos');
+      if (!list.length) { renderEmpty('tbody-agendamentos', 7, 'Nenhum agendamento cadastrado'); return; }
+      document.getElementById('tbody-agendamentos').innerHTML = list.map(a => `
+        <tr>
+          <td class="id-cell">${a.id}</td>
+          <td>${escHtml(a.cliente?.nome || '—')}</td>
+          <td>${escHtml(a.profissional?.nome || '—')}</td>
+          <td>${escHtml(a.servico?.nome || '—')}</td>
+          <td>${fmtDt(a.dataHora)}</td>
+          <td>${statusBadge(a.status)}</td>
+          <td class="actions">
+            <select class="form-select" style="min-width:120px;padding:3px 8px;font-size:10px"
+                    onchange="updateStatusAgendamento(${a.id},this.value);this.value=''">
+              <option value="">Alterar status</option>
+              <option value="CONFIRMADO">CONFIRMADO</option>
+              <option value="CANCELADO">CANCELADO</option>
+              <option value="CONCLUIDO">CONCLUIDO</option>
+              <option value="NO_SHOW">NO_SHOW</option>
+            </select>
+            <button class="btn btn-sm btn-del" onclick="deleteAgendamento(${a.id})">Remover</button>
+          </td>
+        </tr>`).join('');
+    } catch(e) { renderEmpty('tbody-agendamentos', 7, 'Erro ao carregar'); showToast(e.message, 'error'); }
+  }
+
+  async function populateAgendamentoSelects() {
+    try {
+      const [clientes, profissionais, servicos] = await Promise.all([
+        api('/clientes'), api('/profissionais'), api('/servicos')
+      ]);
+      document.getElementById('age-clienteId').innerHTML =
+        '<option value="">Selecione...</option>' + clientes.map(c => `<option value="${c.id}">${escHtml(c.nome)}</option>`).join('');
+      document.getElementById('age-profissionalId').innerHTML =
+        '<option value="">Selecione...</option>' + profissionais.map(p => `<option value="${p.id}">${escHtml(p.nome)}</option>`).join('');
+      document.getElementById('age-servicoId').innerHTML =
+        '<option value="">Selecione...</option>' + servicos.map(s => `<option value="${s.id}">${escHtml(s.nome)} — ${fmtPreco(s.preco)}</option>`).join('');
+    } catch(e) { showToast('Erro ao carregar opções: ' + e.message, 'error'); }
+  }
+
+  function novoAgendamento() {
+    ['age-clienteId','age-profissionalId','age-servicoId','age-dataHora'].forEach(i => document.getElementById(i).value = '');
+  }
+
+  async function saveAgendamento() {
+    const clienteId      = document.getElementById('age-clienteId').value;
+    const profissionalId = document.getElementById('age-profissionalId').value;
+    const servicoId      = document.getElementById('age-servicoId').value;
+    const dataHoraRaw    = document.getElementById('age-dataHora').value;
+    if (!clienteId || !profissionalId || !servicoId || !dataHoraRaw) {
+      showToast('Todos os campos são obrigatórios', 'error'); return;
+    }
+    const dataHora = dataHoraRaw.length === 16 ? dataHoraRaw + ':00' : dataHoraRaw;
+    try {
+      await api('/agendamentos', { method: 'POST', body: JSON.stringify({
+        clienteId: Number(clienteId), profissionalId: Number(profissionalId),
+        servicoId: Number(servicoId), dataHora
+      })});
+      showToast('Agendamento criado!');
+      novoAgendamento(); await loadAgendamentos(); await statSilent('agendamentos');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function updateStatusAgendamento(id, status) {
+    if (!status) return;
+    try {
+      await api('/agendamentos/' + id + '/status', { method: 'PUT', body: JSON.stringify({ status }) });
+      showToast('Status atualizado!'); await loadAgendamentos();
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  async function deleteAgendamento(id) {
+    if (!confirm('Remover este agendamento?')) return;
+    try {
+      await api('/agendamentos/' + id, { method: 'DELETE' });
+      showToast('Agendamento removido!'); await loadAgendamentos(); await statSilent('agendamentos');
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  // ── PAGAMENTOS ──
+  async function loadPagamentos() {
+    try {
+      const list = await api('/pagamentos');
+      if (!list.length) { renderEmpty('tbody-pagamentos', 5, 'Nenhum pagamento registrado'); return; }
+      document.getElementById('tbody-pagamentos').innerHTML = list.map(p => `
+        <tr>
+          <td class="id-cell">${p.id}</td>
+          <td>${p.agendamentoId}</td>
+          <td>${fmtPreco(p.valor)}</td>
+          <td>${escHtml(p.formaPagamento)}</td>
+          <td>${fmtDt(p.dataPagamento)}</td>
+        </tr>`).join('');
+    } catch(e) { renderEmpty('tbody-pagamentos', 5, 'Erro ao carregar'); showToast(e.message, 'error'); }
+  }
+
+  async function savePagamento() {
+    const agendamentoId  = document.getElementById('pag-agendamentoId').value;
+    const valor          = parseFloat(document.getElementById('pag-valor').value);
+    const formaPagamento = document.getElementById('pag-formaPagamento').value;
+    if (!agendamentoId || !valor || !formaPagamento) { showToast('Todos os campos são obrigatórios', 'error'); return; }
+    try {
+      await api('/pagamentos', { method: 'POST', body: JSON.stringify({
+        agendamentoId: Number(agendamentoId), valor, formaPagamento
+      })});
+      showToast('Pagamento registrado!');
+      ['pag-agendamentoId','pag-valor'].forEach(i => document.getElementById(i).value = '');
+      document.getElementById('pag-formaPagamento').value = '';
+      await loadPagamentos();
+    } catch(e) { showToast(e.message, 'error'); }
+  }
+
+  loadAllStats();
+  loadClientes();
+  loadProfissionais();
+  loadServicos();
+  loadAgendamentos();
+  populateAgendamentoSelects();
+  loadPagamentos();
+</script>
+</body>
+</html>
